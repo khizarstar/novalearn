@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NovaLearn — Terms of Service</title>
+  <link rel="icon" href="bot.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --navy: #0B1220;
+      --charcoal: #111827;
+      --gold: #D4AF37;
+      --gold-glow: rgba(212, 175, 55, 0.4);
+      --white: #FFFFFF;
+      --light-gray: #D1D5DB;
+      --glass-bg: rgba(17, 24, 39, 0.5);
+      --glass-border: rgba(212, 175, 55, 0.15);
+      --transition-smooth: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Outfit', 'Poppins', sans-serif;
+      background-color: var(--navy);
+      color: var(--white);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    #preloader {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease;
+    }
+    #preloader img {
+      width: 80px;
+      height: 80px;
+      animation: pulse 1.2s ease-in-out infinite;
+      border-radius: 20px;
+      box-shadow: 0 0 40px var(--gold-glow);
+    }
+    @keyframes pulse { 0%,100% { transform: scale(1); opacity:0.8; } 50% { transform: scale(1.1); opacity:1; } }
+    #particles-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 2; }
+    .navbar {
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(12px);
+      background: rgba(11, 18, 32, 0.5);
+      border-bottom: 1px solid rgba(212,175,55,0.08);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+    .navbar.scrolled { background: rgba(11, 18, 32, 0.85); box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
+    .nav-container {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 0; flex-wrap: wrap; gap: 8px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.5rem; letter-spacing: 1px; }
+    .nav-logo img { height: 44px; width: 44px; border-radius: 12px; object-fit: cover; box-shadow: 0 0 20px rgba(212,175,55,0.2); }
+    .nav-links { display: flex; gap: 28px; font-weight: 500; font-size: 1rem; }
+    .nav-links a { color: var(--light-gray); text-decoration: none; transition: var(--transition-smooth); position: relative; padding-bottom: 4px; }
+    .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+    .nav-links a.active::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 100%; height: 2px; background: var(--gold); box-shadow: 0 0 12px var(--gold-glow); border-radius: 4px; }
+    .nav-invite {
+      background: var(--gold); color: #0B1220 !important; padding: 8px 24px; border-radius: 40px; font-weight: 700;
+      box-shadow: 0 0 20px rgba(212,175,55,0.2); transition: var(--transition-smooth); text-decoration: none; display: inline-block;
+    }
+    .nav-invite:hover { box-shadow: 0 0 40px rgba(212,175,55,0.5); transform: scale(1.05); background: #e2c24a; }
+    .hero { padding: 80px 0 40px; text-align: center; position: relative; }
+    .hero-logo { display: inline-block; margin-bottom: 20px; animation: float 6s ease-in-out infinite; }
+    .hero-logo img { width: 110px; height: 110px; border-radius: 30px; object-fit: cover; box-shadow: 0 0 60px rgba(212,175,55,0.25); }
+    .hero h1 { font-size: 4.2rem; font-weight: 800; letter-spacing: 4px; background: linear-gradient(135deg, #fff 30%, #D4AF37 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 12px 0 16px; }
+    .hero p { max-width: 700px; margin: 0 auto 6px; font-size: 1.2rem; color: var(--light-gray); font-weight: 300; }
+    .hero .meta { color: var(--gold); font-size: 1rem; font-weight: 400; opacity: 0.85; margin-top: 4px; }
+    .btn-gold {
+      background: var(--gold); color: #0B1220; padding: 14px 38px; border-radius: 60px; font-weight: 700;
+      text-decoration: none; transition: var(--transition-smooth); box-shadow: 0 0 20px rgba(212,175,55,0.2);
+      border: none; cursor: pointer; font-size: 1rem; display: inline-block; position: relative; overflow: hidden;
+    }
+    .btn-gold:hover { box-shadow: 0 0 50px rgba(212,175,55,0.5); transform: scale(1.05); }
+    .btn-outline {
+      background: transparent; border: 1.5px solid var(--gold); color: var(--gold); padding: 14px 38px; border-radius: 60px;
+      font-weight: 600; text-decoration: none; transition: var(--transition-smooth); box-shadow: 0 0 10px rgba(212,175,55,0.05);
+      display: inline-block; position: relative; overflow: hidden;
+    }
+    .btn-outline:hover { background: rgba(212,175,55,0.08); box-shadow: 0 0 30px rgba(212,175,55,0.15); transform: scale(1.05); }
+    .ripple {
+      position: absolute; border-radius: 50%; background: rgba(255,255,255,0.3);
+      transform: scale(0); animation: rippleAnim 0.6s linear; pointer-events: none;
+    }
+    @keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }
+    .section-title { font-size: 2.6rem; font-weight: 700; text-align: center; margin: 50px 0 30px; letter-spacing: 1px; }
+    .section-title span { color: var(--gold); }
+    .glass-block {
+      background: var(--glass-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      padding: 32px 36px;
+      margin-bottom: 28px;
+      transition: var(--transition-smooth);
+    }
+    .glass-block:hover { border-color: rgba(212,175,55,0.25); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+    .glass-block h2 { font-size: 1.8rem; color: var(--gold); margin-bottom: 12px; }
+    .glass-block p { color: var(--light-gray); font-size: 1.05rem; margin-bottom: 8px; }
+    .glass-block ul { padding-left: 20px; color: var(--light-gray); }
+    .glass-block ul li { margin-bottom: 6px; }
+    .footer {
+      border-top: 1px solid rgba(212,175,55,0.08);
+      padding: 40px 0 20px;
+      margin-top: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 30px;
+    }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 18px 30px; }
+    .footer-links a { color: var(--light-gray); text-decoration: none; font-size: 0.9rem; transition: var(--transition-smooth); }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-copy { font-size: 0.85rem; color: #6b7280; text-align: right; }
+    .footer-logo img { height: 40px; width: 40px; border-radius: 12px; object-fit: cover; }
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    @keyframes float { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+    @media (max-width: 992px) { .nav-links { gap: 16px; font-size: 0.9rem; } .hero h1 { font-size: 3.2rem; } }
+    @media (max-width: 768px) {
+      .nav-container { flex-direction: column; gap: 12px; }
+      .nav-links { flex-wrap: wrap; justify-content: center; }
+      .hero h1 { font-size: 2.6rem; letter-spacing: 3px; }
+      .hero p { font-size: 1rem; }
+      .section-title { font-size: 2rem; }
+      .glass-block { padding: 24px 20px; }
+    }
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 2rem; }
+      .btn-gold, .btn-outline { padding: 10px 20px; font-size: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+  <div id="preloader"><img src="bot.png" alt="NovaLearn Logo"></div>
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-container">
+      <div class="nav-logo">
+        <img src="bot.png" alt="NovaLearn Logo">
+        <span style="color: var(--gold);">NovaLearn</span>
+      </div>
+      <div class="nav-links">
+        <a href="https://khizarstar.github.io/novalearn/">Home</a>
+        <a href="about.html">About</a>
+        <a href="https://khizarstar.github.io/novalearn/commands.html">Commands</a>
+        <a href="https://khizarstar.github.io/novalearn/features.html">Features</a>
+        <a href="https://khizarstar.github.io/novalearn/faq.html">FAQ</a>
+      </div>
+      <a href="https://discord.com/api/oauth2/authorize?client_id=1522587303262949407&permissions=2214718464&scope=bot%20applications.commands" target="_blank" class="nav-invite">Invite Bot</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-logo"><img src="bot.png" alt="NovaLearn Logo"></div>
+      <h1>Terms of Service</h1>
+      <p>Please read these Terms of Service carefully before using NovaLearn. By accessing or using the NovaLearn Discord Bot, website, or related services, you agree to comply with these terms.</p>
+      <p class="meta">Last Updated: July 2026 &nbsp;|&nbsp; Version: NovaLearn v2 (Successor to Nova Chat)</p>
+    </div>
+  </section>
+
+  <!-- CONTENT -->
+  <div class="container">
+
+    <!-- About NovaLearn -->
+    <div class="glass-block reveal">
+      <h2>📖 About NovaLearn</h2>
+      <p>NovaLearn is the second-generation version of <strong>Nova Chat</strong>, redesigned with a stronger focus on education, learning, and AI-powered academic assistance.</p>
+      <p style="margin-top:8px;">While Nova Chat served as a general-purpose AI assistant, NovaLearn expands its capabilities into a complete educational platform supporting students from Class 1 through University across a wide variety of academic subjects.</p>
+      <p style="margin-top:8px;">By using NovaLearn, you acknowledge that this service is an evolution of Nova Chat and operates under these updated Terms of Service.</p>
+    </div>
+
+    <!-- Acceptance of Terms -->
+    <div class="glass-block reveal">
+      <h2>✅ Acceptance of Terms</h2>
+      <p>By using NovaLearn, you agree to:</p>
+      <ul>
+        <li>Follow these Terms of Service.</li>
+        <li>Use the service responsibly.</li>
+        <li>Respect Discord's Terms of Service and Community Guidelines.</li>
+        <li>Follow all applicable laws and regulations.</li>
+      </ul>
+      <p style="margin-top:8px;">If you do not agree with these terms, you should stop using NovaLearn.</p>
+    </div>
+
+    <!-- Educational Purpose -->
+    <div class="glass-block reveal">
+      <h2>🎓 Educational Purpose</h2>
+      <p>NovaLearn is designed primarily for educational and learning purposes. The bot provides explanations, tutoring, study assistance, research guidance, and educational resources.</p>
+      <p style="margin-top:8px;"><strong>NovaLearn should not replace professional advice in areas such as:</strong></p>
+      <ul>
+        <li>Medicine</li>
+        <li>Law</li>
+        <li>Financial decisions</li>
+        <li>Mental health</li>
+        <li>Emergency situations</li>
+      </ul>
+      <p style="margin-top:8px;">Always consult qualified professionals where appropriate.</p>
+    </div>
+
+    <!-- User Responsibilities -->
+    <div class="glass-block reveal">
+      <h2>🧑‍🎓 User Responsibilities</h2>
+      <p>Users agree to:</p>
+      <ul>
+        <li>Use NovaLearn respectfully.</li>
+        <li>Avoid abusive or harmful behavior.</li>
+        <li>Not exploit bugs or vulnerabilities.</li>
+        <li>Not attempt to disrupt the service.</li>
+        <li>Not upload illegal or harmful content.</li>
+        <li>Not misuse AI-generated responses.</li>
+        <li>Follow Discord's platform rules.</li>
+      </ul>
+    </div>
+
+    <!-- Prohibited Uses -->
+    <div class="glass-block reveal">
+      <h2>🚫 Prohibited Uses</h2>
+      <p>Users may <strong>NOT</strong> use NovaLearn for:</p>
+      <ul>
+        <li>Illegal activities.</li>
+        <li>Harassment or bullying.</li>
+        <li>Hate speech.</li>
+        <li>Spam.</li>
+        <li>Malware distribution.</li>
+        <li>Phishing or scams.</li>
+        <li>Copyright infringement.</li>
+        <li>Impersonation.</li>
+        <li>Generating harmful or dangerous content.</li>
+        <li>Attempting to bypass system protections.</li>
+      </ul>
+      <p style="margin-top:8px;">Violation may result in loss of access.</p>
+    </div>
+
+    <!-- AI Responses -->
+    <div class="glass-block reveal">
+      <h2>🤖 AI Responses</h2>
+      <p>NovaLearn uses artificial intelligence to generate responses. Although we strive for accuracy:</p>
+      <ul>
+        <li>AI responses may contain mistakes.</li>
+        <li>Information may become outdated.</li>
+        <li>Users should verify important information independently.</li>
+      </ul>
+      <p style="margin-top:8px;">NovaLearn is intended to assist learning—not guarantee perfect accuracy.</p>
+    </div>
+
+    <!-- Availability -->
+    <div class="glass-block reveal">
+      <h2>⏳ Availability</h2>
+      <p>We aim to keep NovaLearn available at all times. However, service may occasionally be unavailable due to:</p>
+      <ul>
+        <li>Maintenance</li>
+        <li>Updates</li>
+        <li>Technical issues</li>
+        <li>Discord outages</li>
+        <li>Infrastructure problems</li>
+      </ul>
+      <p style="margin-top:8px;">Availability is not guaranteed.</p>
+    </div>
+
+    <!-- Intellectual Property -->
+    <div class="glass-block reveal">
+      <h2>© Intellectual Property</h2>
+      <p>The NovaLearn name, branding, logo, website design, educational content, and original materials belong to the NovaLearn project unless otherwise stated.</p>
+      <p style="margin-top:8px;">Users may not copy, redistribute, or commercially exploit NovaLearn's branding or original assets without permission.</p>
+    </div>
+
+    <!-- Privacy -->
+    <div class="glass-block reveal">
+      <h2>🔒 Privacy</h2>
+      <p>Your use of NovaLearn is also governed by the <a href="privacy.html" style="color:var(--gold); text-decoration:none;">Privacy Policy</a>. Please review the Privacy Policy to understand how information may be collected and used.</p>
+    </div>
+
+    <!-- Service Updates -->
+    <div class="glass-block reveal">
+      <h2>🔄 Service Updates</h2>
+      <p>NovaLearn is continuously improved. Features, commands, appearance, and functionality may change without prior notice.</p>
+    </div>
+
+    <!-- Limitation of Liability -->
+    <div class="glass-block reveal">
+      <h2>⚠️ Limitation of Liability</h2>
+      <p>NovaLearn is provided "as is" without warranties of any kind. The developers are not responsible for:</p>
+      <ul>
+        <li>Loss of data.</li>
+        <li>Incorrect AI responses.</li>
+        <li>Academic outcomes.</li>
+        <li>Technical interruptions.</li>
+        <li>Damages arising from use of the service.</li>
+      </ul>
+      <p style="margin-top:8px;">Users assume responsibility for how they use the information provided.</p>
+    </div>
+
+    <!-- Account & Access -->
+    <div class="glass-block reveal">
+      <h2>🔑 Account & Access</h2>
+      <p>Access to NovaLearn may be restricted or terminated if users violate these Terms of Service, abuse the platform, or intentionally harm the service or its community.</p>
+    </div>
+
+    <!-- Changes to These Terms -->
+    <div class="glass-block reveal">
+      <h2>📝 Changes to These Terms</h2>
+      <p>These Terms of Service may be updated periodically. The latest version published on this page will always take precedence. Continued use of NovaLearn after updates means you accept the revised terms.</p>
+    </div>
+
+    <!-- Contact -->
+    <div class="glass-block reveal">
+      <h2>📬 Contact</h2>
+      <p>For questions regarding these Terms of Service, contact:</p>
+      <p style="margin-top:8px;"><strong>Email:</strong> <a href="mailto:contact.novalearn.bot@gmail.com" style="color:var(--gold); text-decoration:none;">contact.novalearn.bot@gmail.com</a></p>
+      <p><strong>Discord Support Server:</strong> <a href="https://discord.gg/c5ZzKUYgUY" target="_blank" style="color:var(--gold); text-decoration:none;">https://discord.gg/c5ZzKUYgUY</a></p>
+    </div>
+
+    <!-- Final Section -->
+    <div class="glass-block reveal" style="border-color:rgba(212,175,55,0.3); text-align:center;">
+      <h2 style="color:var(--gold);">💎 Thank You</h2>
+      <p>Thank you for choosing NovaLearn. Our mission is to provide a safe, modern, and intelligent educational platform that empowers learners around the world. By following these Terms of Service, you help us maintain a respectful, secure, and welcoming learning community for everyone.</p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="container footer">
+    <div>
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <img src="bot.png" alt="NovaLearn Logo" style="height:40px; width:40px; border-radius:12px; object-fit:cover;">
+        <span style="color:var(--gold); font-weight:700;">NovaLearn</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://khizarstar.github.io/novalearn/">Home</a>
+        <a href="about.html">About</a>
+        <a href="https://khizarstar.github.io/novalearn/commands.html">Commands</a>
+        <a href="https://khizarstar.github.io/novalearn/features.html">Features</a>
+        <a href="https://khizarstar.github.io/novalearn/faq.html">FAQ</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+    <div class="footer-copy">
+      © 2026 NovaLearn<br>Designed by Muhammad Khizar<br>Hosted on GitHub Pages
+    </div>
+  </footer>
+
+  <script>
+    window.addEventListener('load', () => {
+      document.getElementById('preloader').style.opacity = '0';
+      setTimeout(() => document.getElementById('preloader').style.display = 'none', 500);
+    });
+    // particles
+    (function() {
+      const canvas = document.getElementById('particles-canvas');
+      const ctx = canvas.getContext('2d');
+      let w, h; const particles = []; const count = 60;
+      function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+      window.addEventListener('resize', resize); resize();
+      class Particle {
+        constructor() {
+          this.x = Math.random() * w; this.y = Math.random() * h;
+          this.vx = (Math.random() - 0.5) * 0.3; this.vy = (Math.random() - 0.5) * 0.3;
+          this.r = Math.random() * 2 + 0.8; this.a = Math.random() * 0.4 + 0.1;
+        }
+        update() { this.x += this.vx; this.y += this.vy; if (this.x < 0 || this.x > w) this.vx *= -1; if (this.y < 0 || this.y > h) this.vy *= -1; }
+        draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); ctx.fillStyle = `rgba(212, 175, 55, ${this.a})`; ctx.fill(); }
+      }
+      for (let i = 0; i < count; i++) particles.push(new Particle());
+      function drawLines() {
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y, dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < 120) { ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.strokeStyle = `rgba(212, 175, 55, ${0.08 * (1 - dist/120)})`; ctx.lineWidth = 0.6; ctx.stroke(); }
+          }
+        }
+      }
+      function animate() { ctx.clearRect(0, 0, w, h); particles.forEach(p => { p.update(); p.draw(); }); drawLines(); requestAnimationFrame(animate); }
+      animate();
+    })();
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 40); });
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.15 });
+    reveals.forEach(el => observer.observe(el));
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      if (link.href === window.location.href || link.getAttribute('href') === 'terms.html') link.classList.add('active');
+      else link.classList.remove('active');
+    });
+    document.querySelectorAll('[data-ripple]').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        const rect = this.getBoundingClientRect();
+        const ripple = document.createElement('span'); ripple.className = 'ripple';
+        const size = Math.max(rect.width, rect.height);
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+        ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+        this.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+      });
+    });
+  </script>
+</body>
+</html>
