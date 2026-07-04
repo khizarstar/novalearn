@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NovaLearn — About</title>
+  <link rel="icon" href="bot.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --navy: #0B1220;
+      --charcoal: #111827;
+      --gold: #D4AF37;
+      --gold-glow: rgba(212, 175, 55, 0.4);
+      --white: #FFFFFF;
+      --light-gray: #D1D5DB;
+      --glass-bg: rgba(17, 24, 39, 0.5);
+      --glass-border: rgba(212, 175, 55, 0.15);
+      --transition-smooth: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Outfit', 'Poppins', sans-serif;
+      background-color: var(--navy);
+      color: var(--white);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    #preloader {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease;
+    }
+    #preloader img {
+      width: 80px;
+      height: 80px;
+      animation: pulse 1.2s ease-in-out infinite;
+      border-radius: 20px;
+      box-shadow: 0 0 40px var(--gold-glow);
+    }
+    @keyframes pulse { 0%,100% { transform: scale(1); opacity:0.8; } 50% { transform: scale(1.1); opacity:1; } }
+    #particles-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 2; }
+    .navbar {
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(12px);
+      background: rgba(11, 18, 32, 0.5);
+      border-bottom: 1px solid rgba(212,175,55,0.08);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+    .navbar.scrolled { background: rgba(11, 18, 32, 0.85); box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
+    .nav-container {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 0; flex-wrap: wrap; gap: 8px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.5rem; letter-spacing: 1px; }
+    .nav-logo img { height: 44px; width: 44px; border-radius: 12px; object-fit: cover; box-shadow: 0 0 20px rgba(212,175,55,0.2); }
+    .nav-links { display: flex; gap: 28px; font-weight: 500; font-size: 1rem; }
+    .nav-links a { color: var(--light-gray); text-decoration: none; transition: var(--transition-smooth); position: relative; padding-bottom: 4px; }
+    .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+    .nav-links a.active::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 100%; height: 2px; background: var(--gold); box-shadow: 0 0 12px var(--gold-glow); border-radius: 4px; }
+    .nav-invite {
+      background: var(--gold); color: #0B1220 !important; padding: 8px 24px; border-radius: 40px; font-weight: 700;
+      box-shadow: 0 0 20px rgba(212,175,55,0.2); transition: var(--transition-smooth); text-decoration: none; display: inline-block;
+    }
+    .nav-invite:hover { box-shadow: 0 0 40px rgba(212,175,55,0.5); transform: scale(1.05); background: #e2c24a; }
+    .hero { padding: 80px 0 40px; text-align: center; position: relative; }
+    .hero-logo { display: inline-block; margin-bottom: 20px; animation: float 6s ease-in-out infinite; }
+    .hero-logo img { width: 110px; height: 110px; border-radius: 30px; object-fit: cover; box-shadow: 0 0 60px rgba(212,175,55,0.25); }
+    .hero h1 { font-size: 4.2rem; font-weight: 800; letter-spacing: 4px; background: linear-gradient(135deg, #fff 30%, #D4AF37 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 12px 0 16px; }
+    .hero p { max-width: 700px; margin: 0 auto 30px; font-size: 1.2rem; color: var(--light-gray); font-weight: 300; }
+    .btn-gold {
+      background: var(--gold); color: #0B1220; padding: 14px 38px; border-radius: 60px; font-weight: 700;
+      text-decoration: none; transition: var(--transition-smooth); box-shadow: 0 0 20px rgba(212,175,55,0.2);
+      border: none; cursor: pointer; font-size: 1rem; display: inline-block; position: relative; overflow: hidden;
+    }
+    .btn-gold:hover { box-shadow: 0 0 50px rgba(212,175,55,0.5); transform: scale(1.05); }
+    .btn-outline {
+      background: transparent; border: 1.5px solid var(--gold); color: var(--gold); padding: 14px 38px; border-radius: 60px;
+      font-weight: 600; text-decoration: none; transition: var(--transition-smooth); box-shadow: 0 0 10px rgba(212,175,55,0.05);
+      display: inline-block; position: relative; overflow: hidden;
+    }
+    .btn-outline:hover { background: rgba(212,175,55,0.08); box-shadow: 0 0 30px rgba(212,175,55,0.15); transform: scale(1.05); }
+    .ripple {
+      position: absolute; border-radius: 50%; background: rgba(255,255,255,0.3);
+      transform: scale(0); animation: rippleAnim 0.6s linear; pointer-events: none;
+    }
+    @keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }
+    .section-title { font-size: 2.6rem; font-weight: 700; text-align: center; margin: 50px 0 30px; letter-spacing: 1px; }
+    .section-title span { color: var(--gold); }
+    .glass-block {
+      background: var(--glass-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      padding: 32px 36px;
+      margin-bottom: 30px;
+      transition: var(--transition-smooth);
+    }
+    .glass-block:hover { border-color: rgba(212,175,55,0.25); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+    .glass-block h2 { font-size: 1.8rem; color: var(--gold); margin-bottom: 12px; }
+    .glass-block p { color: var(--light-gray); font-size: 1.05rem; margin-bottom: 8px; }
+    .glass-block ul { padding-left: 20px; color: var(--light-gray); }
+    .glass-block ul li { margin-bottom: 6px; }
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .value-item {
+      background: rgba(17,24,39,0.4);
+      border-radius: 20px;
+      padding: 20px 12px;
+      text-align: center;
+      border: 1px solid rgba(212,175,55,0.06);
+      transition: var(--transition-smooth);
+    }
+    .value-item:hover { border-color: var(--gold); transform: translateY(-6px); box-shadow: 0 10px 30px rgba(212,175,55,0.05); }
+    .value-item .icon { font-size: 2.2rem; margin-bottom: 8px; }
+    .value-item h4 { font-size: 1.1rem; color: var(--gold); }
+    .value-item p { font-size: 0.9rem; color: var(--light-gray); margin-top: 4px; }
+    .list-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .list-grid li {
+      list-style: none;
+      background: rgba(212,175,55,0.05);
+      padding: 10px 16px;
+      border-radius: 40px;
+      border: 1px solid rgba(212,175,55,0.08);
+      color: var(--light-gray);
+      font-weight: 400;
+      text-align: center;
+      transition: var(--transition-smooth);
+    }
+    .list-grid li:hover { background: rgba(212,175,55,0.1); border-color: var(--gold); color: var(--white); }
+    .footer {
+      border-top: 1px solid rgba(212,175,55,0.08);
+      padding: 40px 0 20px;
+      margin-top: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 30px;
+    }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 18px 30px; }
+    .footer-links a { color: var(--light-gray); text-decoration: none; font-size: 0.9rem; transition: var(--transition-smooth); }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-copy { font-size: 0.85rem; color: #6b7280; text-align: right; }
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    @keyframes float { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+    @media (max-width: 992px) { .nav-links { gap: 16px; font-size: 0.9rem; } .hero h1 { font-size: 3.2rem; } }
+    @media (max-width: 768px) {
+      .nav-container { flex-direction: column; gap: 12px; }
+      .nav-links { flex-wrap: wrap; justify-content: center; }
+      .hero h1 { font-size: 2.6rem; letter-spacing: 3px; }
+      .hero p { font-size: 1rem; }
+      .section-title { font-size: 2.2rem; }
+      .glass-block { padding: 24px 20px; }
+      .list-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) { .hero h1 { font-size: 2rem; } .btn-gold, .btn-outline { padding: 10px 20px; font-size: 0.9rem; } }
+  </style>
+</head>
+<body>
+  <div id="preloader"><img src="bot.png" alt="NovaLearn Logo"></div>
+  <canvas id="particles-canvas"></canvas>
+
+  <nav class="navbar" id="navbar">
+    <div class="container nav-container">
+      <div class="nav-logo">
+        <img src="bot.png" alt="NovaLearn Logo">
+        <span style="color: var(--gold);">NovaLearn</span>
+      </div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html" class="active">About</a>
+        <a href="features.html">Features</a>
+        <a href="commands.html">Commands</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <a href="https://discord.com/api/oauth2/authorize?client_id=1522587303262949407&permissions=2214718464&scope=bot%20applications.commands" target="_blank" class="nav-invite">Invite Bot</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-logo"><img src="bot.png" alt="NovaLearn Logo"></div>
+      <h1>About NovaLearn</h1>
+      <p>Empowering every learner with intelligent AI education — from Class 1 to University.</p>
+      <div class="hero-buttons" style="display:flex; flex-wrap:wrap; justify-content:center; gap:18px;">
+        <a href="https://discord.com/api/oauth2/authorize?client_id=1522587303262949407&permissions=2214718464&scope=bot%20applications.commands" target="_blank" class="btn-gold" data-ripple>Invite Bot</a>
+        <a href="https://discord.gg/c5ZzKUYgUY" target="_blank" class="btn-outline" data-ripple>Support Server</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="glass-block reveal">
+      <h2>📖 Our Story</h2>
+      <p>NovaLearn was created with one simple vision: to make quality education accessible to everyone, regardless of age, location, or academic level. Learning should never be limited by time, resources, or financial barriers. Every student deserves a knowledgeable companion that is always available to explain concepts clearly and patiently.</p>
+      <p style="margin-top:12px;">Whether you're solving your first mathematics problem in primary school, preparing for board examinations, studying advanced university subjects, or simply exploring a new topic out of curiosity, NovaLearn is designed to guide you every step of the way.</p>
+      <p style="margin-top:12px;">Unlike ordinary chatbots, NovaLearn is an intelligent learning companion focused on understanding, not just answering. It encourages curiosity, critical thinking, and deep learning through detailed explanations, step-by-step guidance, and personalized support.</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px;" class="reveal">
+      <div class="glass-block" style="margin-bottom:0;">
+        <h2>🎯 Our Mission</h2>
+        <p>Our mission is to provide every student with a free, intelligent, and trustworthy AI tutor capable of teaching a wide range of academic subjects with clarity, accuracy, and patience. We believe education should inspire confidence, encourage curiosity, and help learners develop skills that last a lifetime.</p>
+      </div>
+      <div class="glass-block" style="margin-bottom:0;">
+        <h2>🔭 Our Vision</h2>
+        <p>To become one of the world's most trusted AI learning platforms, helping millions of students learn, grow, and succeed through modern technology while promoting knowledge, integrity, and lifelong learning.</p>
+      </div>
+    </div>
+
+    <div class="glass-block reveal">
+      <h2>✨ What NovaLearn Offers</h2>
+      <p>NovaLearn provides comprehensive educational assistance across dozens of academic subjects, including Mathematics, Physics, Chemistry, Biology, Computer Science, Programming, English, Urdu, Economics, Geography, History, Political Science, Islamic Studies, General Science, and many more.</p>
+      <div style="margin-top:16px;">
+        <ul class="list-grid">
+          <li>Step-by-step solutions</li>
+          <li>Homework assistance</li>
+          <li>Exam preparation</li>
+          <li>Essay writing guidance</li>
+          <li>Research support</li>
+          <li>Programming help</li>
+          <li>Grammar correction</li>
+          <li>Language translation</li>
+          <li>Concept explanations</li>
+          <li>Personalized AI tutoring</li>
+          <li>Study planning</li>
+          <li>Revision notes</li>
+          <li>Practice questions</li>
+          <li>Learning resources</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="glass-block reveal">
+      <h2>🌟 Why Choose NovaLearn?</h2>
+      <ul class="list-grid">
+        <li>✔ Supports students from Class 1 to University</li>
+        <li>✔ Covers more than 20 academic subjects</li>
+        <li>✔ Easy-to-understand explanations</li>
+        <li>✔ Personalized AI tutoring</li>
+        <li>✔ Available 24 hours a day, 7 days a week</li>
+        <li>✔ Fast, intelligent responses</li>
+        <li>✔ Modern AI technology</li>
+        <li>✔ Beginner-friendly learning</li>
+        <li>✔ Clean, professional experience</li>
+        <li>✔ Continuous improvements and new features</li>
+      </ul>
+    </div>
+
+    <div class="reveal">
+      <h2 class="section-title">💎 <span>Our Values</span></h2>
+      <div class="value-grid">
+        <div class="value-item"><div class="icon">📚</div><h4>Knowledge</h4><p>Education empowers individuals and transforms communities.</p></div>
+        <div class="value-item"><div class="icon">🎯</div><h4>Accuracy</h4><p>Clear, reliable, and well-structured explanations.</p></div>
+        <div class="value-item"><div class="icon">🤝</div><h4>Respect</h4><p>Patience, encouragement, and a welcoming environment.</p></div>
+        <div class="value-item"><div class="icon">🚀</div><h4>Innovation</h4><p>Modern AI technology for an exceptional educational experience.</p></div>
+        <div class="value-item"><div class="icon">🌍</div><h4>Accessibility</h4><p>Learning available to everyone, everywhere, at any time.</p></div>
+      </div>
+    </div>
+
+    <div class="glass-block reveal">
+      <h2>🌐 Our Community</h2>
+      <p>NovaLearn is built for students, teachers, lifelong learners, and anyone who wants to expand their knowledge. Every question is an opportunity to learn something new, and every lesson brings you one step closer to your goals.</p>
+    </div>
+
+    <div class="glass-block reveal" style="border-color:rgba(212,175,55,0.3);">
+      <h2 style="color:var(--gold);">💡 Learn Smarter. Think Deeper. Achieve More.</h2>
+      <p>Education is not just about finding answers—it's about understanding ideas, developing skills, and building confidence. NovaLearn is here to support your learning journey with intelligent guidance, clear explanations, and a passion for helping you succeed.</p>
+      <div style="margin-top:24px; text-align:center;">
+        <a href="https://discord.com/api/oauth2/authorize?client_id=1522587303262949407&permissions=2214718464&scope=bot%20applications.commands" target="_blank" class="btn-gold" data-ripple>Invite NovaLearn</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="container footer">
+    <div>
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <img src="bot.png" alt="NovaLearn Logo" style="height:40px; width:40px; border-radius:12px; object-fit:cover;">
+        <span style="color:var(--gold); font-weight:700;">NovaLearn</span>
+      </div>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="commands.html">Commands</a>
+        <a href="features.html">Features</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+      </div>
+    </div>
+    <div class="footer-copy">
+      © 2026 NovaLearn<br>Designed by Muhammad Khizar<br>Hosted on GitHub Pages
+    </div>
+  </footer>
+
+  <script>
+    window.addEventListener('load', () => {
+      document.getElementById('preloader').style.opacity = '0';
+      setTimeout(() => document.getElementById('preloader').style.display = 'none', 500);
+    });
+    (function() {
+      const canvas = document.getElementById('particles-canvas');
+      const ctx = canvas.getContext('2d');
+      let w, h; const particles = []; const count = 60;
+      function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+      window.addEventListener('resize', resize); resize();
+      class Particle {
+        constructor() {
+          this.x = Math.random() * w; this.y = Math.random() * h;
+          this.vx = (Math.random() - 0.5) * 0.3; this.vy = (Math.random() - 0.5) * 0.3;
+          this.r = Math.random() * 2 + 0.8; this.a = Math.random() * 0.4 + 0.1;
+        }
+        update() { this.x += this.vx; this.y += this.vy; if (this.x < 0 || this.x > w) this.vx *= -1; if (this.y < 0 || this.y > h) this.vy *= -1; }
+        draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); ctx.fillStyle = `rgba(212, 175, 55, ${this.a})`; ctx.fill(); }
+      }
+      for (let i = 0; i < count; i++) particles.push(new Particle());
+      function drawLines() {
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y, dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < 120) { ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.strokeStyle = `rgba(212, 175, 55, ${0.08 * (1 - dist/120)})`; ctx.lineWidth = 0.6; ctx.stroke(); }
+          }
+        }
+      }
+      function animate() { ctx.clearRect(0, 0, w, h); particles.forEach(p => { p.update(); p.draw(); }); drawLines(); requestAnimationFrame(animate); }
+      animate();
+    })();
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 40); });
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.15 });
+    reveals.forEach(el => observer.observe(el));
+    document.querySelectorAll('[data-ripple]').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        const rect = this.getBoundingClientRect();
+        const ripple = document.createElement('span'); ripple.className = 'ripple';
+        const size = Math.max(rect.width, rect.height);
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+        ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+        this.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+      });
+    });
+  </script>
+</body>
+</html>
