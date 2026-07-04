@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — NovaLearn</title>
+  <link rel="icon" href="logo.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    /* ===== RESET & VARIABLES ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --navy: #0B1220;
+      --charcoal: #111827;
+      --gold: #D4AF37;
+      --gold-glow: rgba(212, 175, 55, 0.4);
+      --white: #FFFFFF;
+      --light-gray: #D1D5DB;
+      --glass-bg: rgba(17, 24, 39, 0.6);
+      --glass-border: rgba(212, 175, 55, 0.12);
+      --transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Outfit', 'Space Grotesk', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ===== PARTICLES CANVAS ===== */
+    #particles-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ===== MAIN GLASS CARD ===== */
+    .glass-container {
+      position: relative;
+      z-index: 2;
+      max-width: 560px;
+      width: 100%;
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px) saturate(1.2);
+      -webkit-backdrop-filter: blur(16px) saturate(1.2);
+      border: 1px solid var(--glass-border);
+      border-radius: 32px;
+      padding: 48px 40px 40px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(212, 175, 55, 0.04);
+      text-align: center;
+      animation: fadeUp 0.8s ease forwards;
+      opacity: 0;
+      transform: translateY(24px);
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ===== LOGO ===== */
+    .logo {
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+
+    .logo img {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      box-shadow: 0 0 40px rgba(212, 175, 55, 0.12);
+      object-fit: cover;
+    }
+
+    /* ===== 404 TITLE ===== */
+    .error-code {
+      font-size: 6.5rem;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 6px;
+      background: linear-gradient(135deg, #fff 25%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 60px rgba(212, 175, 55, 0.08);
+      margin-bottom: 4px;
+    }
+
+    .error-sub {
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .error-desc {
+      font-size: 1rem;
+      color: var(--light-gray);
+      font-weight: 300;
+      max-width: 380px;
+      margin: 0 auto 20px;
+      line-height: 1.6;
+    }
+
+    /* ===== QUOTE ===== */
+    .quote-box {
+      margin: 8px 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .quote-box i {
+      color: var(--gold);
+      opacity: 0.5;
+      font-size: 0.9rem;
+    }
+
+    .quote-box span {
+      color: var(--light-gray);
+      font-weight: 300;
+      font-size: 0.95rem;
+      font-style: italic;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 12px 28px;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary {
+      background: var(--gold);
+      color: #0B1220;
+      box-shadow: 0 4px 24px rgba(212, 175, 55, 0.2);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 40px rgba(212, 175, 55, 0.35);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--gold);
+      background: rgba(212, 175, 55, 0.06);
+      transform: translateY(-3px);
+      box-shadow: 0 0 30px rgba(212, 175, 55, 0.04);
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      position: relative;
+      z-index: 2;
+      margin-top: 32px;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.15);
+      letter-spacing: 0.5px;
+      text-align: center;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 600px) {
+      .glass-container {
+        padding: 32px 24px 28px;
+      }
+      .error-code {
+        font-size: 5rem;
+      }
+      .error-sub {
+        font-size: 1.3rem;
+      }
+      .btn-group {
+        flex-direction: column;
+        align-items: center;
+      }
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .glass-container {
+        padding: 24px 16px 20px;
+      }
+      .error-code {
+        font-size: 4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== PARTICLES CANVAS ===== -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- ===== MAIN GLASS CARD ===== -->
+  <div class="glass-container">
+
+    <!-- Logo -->
+    <div class="logo">
+      <img src="logo.png" alt="NovaLearn Logo" />
+    </div>
+
+    <!-- 404 Title -->
+    <div class="error-code">404</div>
+    <div class="error-sub">Page Not Found</div>
+    <p class="error-desc">
+      The page you're looking for doesn't exist, may have been moved, or the link is incorrect.
+    </p>
+
+    <!-- Quote -->
+    <div class="quote-box">
+      <i class="fas fa-arrow-left"></i>
+      <span id="quote-text">Learning never stops.</span>
+    </div>
+
+    <!-- Buttons -->
+    <div class="btn-group">
+      <a href="https://khizarstar.github.io/novalearn/" class="btn btn-primary">
+        <i class="fas fa-home"></i> Return Home
+      </a>
+      <a href="https://khizarstar.github.io/novalearn/features.html" class="btn btn-outline">
+        <i class="fas fa-rocket"></i> View Features
+      </a>
+      <a href="https://khizarstar.github.io/novalearn/contact.html" class="btn btn-outline">
+        <i class="fas fa-envelope"></i> Contact
+      </a>
+    </div>
+
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <div class="footer">
+    © 2026 NovaLearn. All Rights Reserved.
+  </div>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // ===== PARTICLES =====
+    (function() {
+      const canvas = document.getElementById('particles-canvas');
+      const ctx = canvas.getContext('2d');
+      let w, h;
+      const particles = [];
+      const count = 55;
+
+      function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      class Particle {
+        constructor() {
+          this.x = Math.random() * w;
+          this.y = Math.random() * h;
+          this.vx = (Math.random() - 0.5) * 0.3;
+          this.vy = (Math.random() - 0.5) * 0.3;
+          this.r = Math.random() * 2 + 0.8;
+          this.a = Math.random() * 0.4 + 0.1;
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          if (this.x < 0 || this.x > w) this.vx *= -1;
+          if (this.y < 0 || this.y > h) this.vy *= -1;
+        }
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(212, 175, 55, ${this.a})`;
+          ctx.fill();
+        }
+      }
+
+      for (let i = 0; i < count; i++) particles.push(new Particle());
+
+      function drawLines() {
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 120) {
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = `rgba(212, 175, 55, ${0.06 * (1 - dist / 120)})`;
+              ctx.lineWidth = 0.6;
+              ctx.stroke();
+            }
+          }
+        }
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, w, h);
+        particles.forEach(p => { p.update();
+          p.draw(); });
+        drawLines();
+        requestAnimationFrame(animate);
+      }
+      animate();
+    })();
+
+    // ===== RANDOM QUOTE =====
+    (function() {
+      const quotes = [
+        "Learning never stops.",
+        "Every expert was once a beginner.",
+        "Knowledge lights the future.",
+        "Mistakes are proof that you are learning.",
+        "The only true wisdom is in knowing you know nothing.",
+        "Education is the most powerful weapon.",
+        "Curiosity is the wick in the candle of learning."
+      ];
+      const randomIndex = Math.floor(Math.random() * quotes.length);
+      document.getElementById('quote-text').textContent = quotes[randomIndex];
+    })();
+
+    // ===== MOUSE PARALLAX (subtle) =====
+    (function() {
+      const container = document.querySelector('.glass-container');
+      if (!container) return;
+      document.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 3;
+        const y = (e.clientY / window.innerHeight - 0.5) * 3;
+        container.style.transform = `perspective(800px) rotateY(${x * 0.3}deg) rotateX(${-y * 0.3}deg)`;
+      });
+      document.addEventListener('mouseleave', () => {
+        container.style.transform = 'perspective(800px) rotateY(0deg) rotateX(0deg)';
+      });
+    })();
+  </script>
+
+</body>
+</html>
