@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NovaLearn — Login</title>
+  <link rel="icon" href="bot.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    /* ===== RESET & VARIABLES ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --navy: #0B1220;
+      --charcoal: #111827;
+      --gold: #FFD54A;
+      --gold-dark: #FFC107;
+      --gold-glow: rgba(255, 213, 74, 0.25);
+      --purple: #6D5BFF;
+      --purple-glow: rgba(109, 91, 255, 0.12);
+      --white: #FFFFFF;
+      --light-gray: #D1D5DB;
+      --glass-bg: rgba(17, 24, 39, 0.55);
+      --glass-border: rgba(255, 213, 74, 0.08);
+      --glass-highlight: rgba(255, 255, 255, 0.03);
+      --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      --radius: 24px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Outfit', 'Space Grotesk', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      overflow-x: hidden;
+      position: relative;
+      padding-top: 0;
+    }
+
+    /* ===== PARTICLES CANVAS ===== */
+    #particles-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ===== CONTAINER ===== */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 2;
+      width: 100%;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      background: rgba(11, 18, 32, 0.5);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      width: 100%;
+    }
+    .navbar.scrolled {
+      background: rgba(11, 18, 32, 0.85);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    }
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      flex-wrap: wrap;
+      gap: 8px;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+    }
+    .nav-logo img {
+      height: 44px;
+      width: 44px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+    }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      font-weight: 500;
+      font-size: 1rem;
+    }
+    .nav-links a {
+      color: var(--light-gray);
+      text-decoration: none;
+      transition: var(--transition);
+      position: relative;
+      padding-bottom: 4px;
+    }
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--gold);
+    }
+    .nav-links a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--gold);
+      box-shadow: 0 0 12px var(--gold-glow);
+      border-radius: 4px;
+    }
+    /* ===== LOGIN BUTTON IN NAVBAR ===== */
+    .btn-login-nav {
+      background: var(--gold);
+      color: #0B1220 !important;
+      padding: 8px 28px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+      transition: var(--transition);
+      text-decoration: none;
+      display: inline-block;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-login-nav:hover {
+      box-shadow: 0 0 40px rgba(212, 175, 55, 0.5);
+      transform: scale(1.05);
+      background: #FFC107;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      padding: 60px 0 40px;
+      text-align: center;
+      position: relative;
+      animation: fadeUp 0.9s ease forwards;
+      opacity: 0;
+      transform: translateY(24px);
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero .badge {
+      display: inline-block;
+      background: rgba(255, 213, 74, 0.08);
+      color: var(--gold);
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 4px 18px;
+      border-radius: 40px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      border: 1px solid rgba(255, 213, 74, 0.1);
+      margin-bottom: 12px;
+    }
+
+    .hero h1 {
+      font-size: 3.2rem;
+      font-weight: 800;
+      letter-spacing: 3px;
+      background: linear-gradient(135deg, #fff 30%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 8px 0 12px;
+    }
+
+    .hero p {
+      max-width: 600px;
+      margin: 0 auto 30px;
+      font-size: 1.05rem;
+      color: var(--light-gray);
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    /* ===== LOGIN CARD ===== */
+    .login-wrapper {
+      display: flex;
+      justify-content: center;
+      padding: 10px 0 30px;
+    }
+
+    .login-card {
+      max-width: 460px;
+      width: 100%;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px) saturate(1.3);
+      -webkit-backdrop-filter: blur(20px) saturate(1.3);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 48px 40px 40px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 213, 74, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      text-align: center;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(ellipse at 30% 20%, rgba(255, 213, 74, 0.03), transparent 60%);
+      pointer-events: none;
+    }
+
+    .login-card:hover {
+      border-color: rgba(255, 213, 74, 0.15);
+      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 213, 74, 0.06);
+    }
+
+    .login-card .logo-large {
+      display: inline-block;
+      margin-bottom: 16px;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .login-card .logo-large img {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      box-shadow: 0 0 40px rgba(255, 213, 74, 0.12);
+      object-fit: cover;
+    }
+
+    @keyframes float {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+
+    .login-card h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+
+    .login-card .sub {
+      color: var(--light-gray);
+      font-size: 0.95rem;
+      font-weight: 300;
+      margin-bottom: 28px;
+    }
+
+    /* ===== DISCORD BUTTON ===== */
+    .btn-discord {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 16px 36px;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      text-decoration: none;
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      background: linear-gradient(135deg, #5865F2, #4752c4);
+      color: #fff;
+      box-shadow: 0 4px 30px rgba(88, 101, 242, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-discord i {
+      font-size: 1.4rem;
+    }
+
+    .btn-discord:hover {
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: 0 8px 50px rgba(88, 101, 242, 0.4);
+    }
+
+    .btn-discord:active {
+      transform: scale(0.98);
+    }
+
+    /* Ripple effect */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(0);
+      animation: rippleAnim 0.6s linear;
+      pointer-events: none;
+    }
+
+    @keyframes rippleAnim {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    .login-card .secure-note {
+      margin-top: 16px;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.2);
+      font-weight: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .login-card .secure-note i {
+      color: var(--gold);
+      opacity: 0.4;
+    }
+
+    /* ===== SECURITY FEATURES ===== */
+    .security-section {
+      padding: 40px 0 20px;
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 30px;
+      letter-spacing: 1px;
+    }
+
+    .section-title span {
+      color: var(--gold);
+    }
+
+    .security-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 10px 0 30px;
+    }
+
+    .security-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 24px 18px;
+      text-align: center;
+      transition: var(--transition);
+    }
+
+    .security-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255, 213, 74, 0.15);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .security-card .icon {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+      color: var(--gold);
+    }
+
+    .security-card h4 {
+      font-size: 1.05rem;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+
+    .security-card p {
+      font-size: 0.85rem;
+      color: var(--light-gray);
+      font-weight: 300;
+    }
+
+    /* ===== WHY DISCORD ===== */
+    .why-section {
+      padding: 20px 0 60px;
+    }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+      margin: 10px 0 20px;
+    }
+
+    .why-item {
+      background: rgba(17, 24, 39, 0.3);
+      border: 1px solid rgba(255, 213, 74, 0.04);
+      border-radius: 16px;
+      padding: 18px 14px;
+      text-align: center;
+      transition: var(--transition);
+    }
+
+    .why-item:hover {
+      border-color: rgba(255, 213, 74, 0.08);
+      background: rgba(17, 24, 39, 0.5);
+    }
+
+    .why-item i {
+      color: var(--gold);
+      font-size: 1.4rem;
+      margin-bottom: 4px;
+      opacity: 0.7;
+    }
+
+    .why-item span {
+      font-size: 0.85rem;
+      color: var(--light-gray);
+      font-weight: 300;
+      display: block;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 992px) {
+      .nav-links {
+        gap: 16px;
+        font-size: 0.9rem;
+      }
+      .hero h1 {
+        font-size: 2.6rem;
+      }
+      .login-card {
+        padding: 36px 28px 32px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-container {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .hero h1 {
+        font-size: 2.2rem;
+        letter-spacing: 2px;
+      }
+      .hero p {
+        font-size: 0.95rem;
+      }
+      .section-title {
+        font-size: 1.8rem;
+      }
+      .security-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .why-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .login-card {
+        padding: 28px 20px 24px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+      .security-grid {
+        grid-template-columns: 1fr;
+      }
+      .why-grid {
+        grid-template-columns: 1fr;
+      }
+      .login-card {
+        padding: 24px 16px 20px;
+        border-radius: 18px;
+      }
+      .btn-discord {
+        font-size: 0.9rem;
+        padding: 14px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== PARTICLES CANVAS ===== -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <img src="bot.png" alt="NovaLearn Logo">
+        <span style="color: var(--gold);">NovaLearn</span>
+      </div>
+      <!-- Removed all nav links: Home, About, Features, Commands, FAQ, Contact -->
+      <!-- Replaced Invite Bot with Login button -->
+      <a href="http://132.243.253.240:4928/login" class="btn-login-nav">
+        <i class="fas fa-sign-in-alt"></i> Login
+      </a>
+    </div>
+  </nav>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="container">
+
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+      <div class="badge">🔐 Secure Authentication</div>
+      <h1>Welcome Back to NovaLearn</h1>
+      <p>Sign in securely using your Discord account to unlock your personalized educational dashboard, AI learning tools, progress tracking, and future premium features.</p>
+    </section>
+
+    <!-- ===== LOGIN CARD ===== -->
+    <div class="login-wrapper">
+      <div class="login-card">
+        <div class="logo-large">
+          <img src="bot.png" alt="NovaLearn Logo">
+        </div>
+        <h2>Continue with Discord</h2>
+        <p class="sub">Sign in with your Discord account to access NovaLearn.</p>
+
+        <!--
+          🔐 Discord OAuth2 Login
+          This button redirects to the backend authentication server.
+          The backend handles the complete OAuth2 flow with Discord.
+        -->
+        <a href="http://132.243.253.240:4928/login" class="btn-discord" id="discordLogin" data-ripple>
+          <i class="fab fa-discord"></i> Continue with Discord
+        </a>
+
+        <p class="secure-note">
+          <i class="fas fa-shield-alt"></i> Discord authentication is secure and your password is never shared with NovaLearn.
+        </p>
+      </div>
+    </div>
+
+    <!-- ===== SECURITY FEATURES ===== -->
+    <section class="security-section">
+      <h2 class="section-title">🛡️ <span>Security Features</span></h2>
+      <div class="security-grid">
+        <div class="security-card">
+          <div class="icon">🔒</div>
+          <h4>Secure Authentication</h4>
+          <p>Powered by Discord OAuth2.</p>
+        </div>
+        <div class="security-card">
+          <div class="icon">🛡️</div>
+          <h4>Safe &amp; Private</h4>
+          <p>Your credentials stay with Discord.</p>
+        </div>
+        <div class="security-card">
+          <div class="icon">⚡</div>
+          <h4>Fast Login</h4>
+          <p>Sign in with one click.</p>
+        </div>
+        <div class="security-card">
+          <div class="icon">🎓</div>
+          <h4>Personalized Learning</h4>
+          <p>Access your dashboard and future learning statistics.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== WHY DISCORD ===== -->
+    <section class="why-section">
+      <h2 class="section-title">💬 <span>Why Discord?</span></h2>
+      <div class="why-grid">
+        <div class="why-item"><i class="fas fa-fingerprint"></i><span>One-click login</span></div>
+        <div class="why-item"><i class="fas fa-lock"></i><span>No passwords stored by NovaLearn</span></div>
+        <div class="why-item"><i class="fas fa-shield-halved"></i><span>Secure authentication</span></div>
+        <div class="why-item"><i class="fas fa-chart-simple"></i><span>Future dashboard access</span></div>
+        <div class="why-item"><i class="fas fa-clock-rotate-left"></i><span>AI learning history</span></div>
+        <div class="why-item"><i class="fas fa-user-graduate"></i><span>Personalized education experience</span></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER REMOVED ===== -->
+  <!-- No footer with Terms of Service, Privacy Policy, or any links -->
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // ===== PRELOADER (fade effect) =====
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.style.opacity = '1';
+    });
+
+    // ===== PARTICLES =====
+    (function() {
+      const canvas = document.getElementById('particles-canvas');
+      const ctx = canvas.getContext('2d');
+      let w, h;
+      const particles = [];
+      const count = 60;
+
+      function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      class Particle {
+        constructor() {
+          this.x = Math.random() * w;
+          this.y = Math.random() * h;
+          this.vx = (Math.random() - 0.5) * 0.3;
+          this.vy = (Math.random() - 0.5) * 0.3;
+          this.r = Math.random() * 2 + 0.8;
+          this.a = Math.random() * 0.4 + 0.1;
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          if (this.x < 0 || this.x > w) this.vx *= -1;
+          if (this.y < 0 || this.y > h) this.vy *= -1;
+        }
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 213, 74, ${this.a})`;
+          ctx.fill();
+        }
+      }
+
+      for (let i = 0; i < count; i++) particles.push(new Particle());
+
+      function drawLines() {
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 120) {
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = `rgba(255, 213, 74, ${0.06 * (1 - dist / 120)})`;
+              ctx.lineWidth = 0.6;
+              ctx.stroke();
+            }
+          }
+        }
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, w, h);
+        particles.forEach(p => { p.update();
+          p.draw(); });
+        drawLines();
+        requestAnimationFrame(animate);
+      }
+      animate();
+    })();
+
+    // ===== NAVBAR SCROLL =====
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // ===== RIPPLE EFFECT =====
+    document.querySelectorAll('[data-ripple]').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        const rect = this.getBoundingClientRect();
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        const size = Math.max(rect.width, rect.height);
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+        ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+        this.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+      });
+    });
+
+    // ===== MOUSE GLOW PARALLAX (subtle) =====
+    (function() {
+      const card = document.querySelector('.login-card');
+      if (!card) return;
+      document.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 2;
+        const y = (e.clientY / window.innerHeight - 0.5) * 2;
+        card.style.transform = `perspective(1000px) rotateY(${x * 0.5}deg) rotateX(${-y * 0.5}deg)`;
+      });
+      document.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg)';
+      });
+    })();
+
+    // ===== Check if already logged in =====
+    // Redirect to dashboard if already authenticated
+    fetch('http://132.243.253.240:4928/api/session', {
+      credentials: 'include'
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.authenticated) {
+        window.location.href = 'http://132.243.253.240:4928/dashboard.html';
+      }
+    })
+    .catch(() => {
+      // Silent fail - user is not logged in
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — NovaLearn</title>
+  <link rel="icon" href="bot.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* ===== RESET & VARIABLES ===== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --navy: #0B1220;
+      --charcoal: #111827;
+      --gold: #FFD54A;
+      --gold-dark: #FFC107;
+      --gold-glow: rgba(255, 213, 74, 0.25);
+      --purple: #6D5BFF;
+      --purple-glow: rgba(109, 91, 255, 0.12);
+      --white: #FFFFFF;
+      --light-gray: #D1D5DB;
+      --glass-bg: rgba(17, 24, 39, 0.55);
+      --glass-border: rgba(255, 213, 74, 0.08);
+      --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      --radius: 24px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Outfit', 'Space Grotesk', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ===== PARTICLES CANVAS ===== */
+    #particles-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ===== CONTAINER ===== */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 2;
+      width: 100%;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      background: rgba(11, 18, 32, 0.5);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      width: 100%;
+    }
+    .navbar.scrolled {
+      background: rgba(11, 18, 32, 0.85);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    }
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      flex-wrap: wrap;
+      gap: 8px;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+    }
+    .nav-logo img {
+      height: 44px;
+      width: 44px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+    }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      font-weight: 500;
+      font-size: 1rem;
+    }
+    .nav-links a {
+      color: var(--light-gray);
+      text-decoration: none;
+      transition: var(--transition);
+      position: relative;
+      padding-bottom: 4px;
+    }
+    .nav-links a:hover {
+      color: var(--gold);
+    }
+    .nav-links a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--gold);
+      box-shadow: 0 0 12px var(--gold-glow);
+      border-radius: 4px;
+    }
+    .btn-logout-nav {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-logout-nav:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.3);
+      transform: scale(1.02);
+    }
+
+    /* ===== DASHBOARD CONTENT ===== */
+    .dashboard-content {
+      padding: 40px 0 60px;
+      animation: fadeUp 0.9s ease forwards;
+      opacity: 0;
+      transform: translateY(24px);
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== USER WELCOME SECTION ===== */
+    .welcome-section {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 32px 36px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px) saturate(1.3);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
+      flex-wrap: wrap;
+    }
+
+    .welcome-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(ellipse at 30% 20%, rgba(255, 213, 74, 0.03), transparent 60%);
+      pointer-events: none;
+    }
+
+    .welcome-section .avatar-wrapper {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .welcome-section .avatar-wrapper::after {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: -4px;
+      right: -4px;
+      bottom: -4px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--purple));
+      opacity: 0.3;
+      z-index: -1;
+      animation: pulseGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.05); }
+    }
+
+    .welcome-section .avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 213, 74, 0.2);
+      object-fit: cover;
+      background: #2a2f4a;
+    }
+
+    .welcome-section .user-info h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff 30%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .welcome-section .user-info .sub {
+      color: var(--light-gray);
+      font-size: 0.95rem;
+      font-weight: 300;
+    }
+
+    .welcome-section .user-info .user-id {
+      color: rgba(255, 255, 255, 0.15);
+      font-size: 0.7rem;
+      font-weight: 300;
+    }
+
+    .welcome-section .user-stats {
+      display: flex;
+      gap: 24px;
+      margin-left: auto;
+      flex-wrap: wrap;
+    }
+
+    .welcome-section .stat-item {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 8px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .welcome-section .stat-item .num {
+      color: var(--gold);
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .welcome-section .stat-item .label {
+      color: rgba(255, 255, 255, 0.2);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== DASHBOARD GRID ===== */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      margin: 30px 0;
+    }
+
+    .dash-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px) saturate(1.2);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dash-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255, 213, 74, 0.15);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .dash-card .card-icon {
+      font-size: 2.2rem;
+      color: var(--gold);
+      margin-bottom: 12px;
+      opacity: 0.8;
+    }
+
+    .dash-card h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .dash-card p {
+      color: var(--light-gray);
+      font-size: 0.9rem;
+      font-weight: 300;
+      margin-bottom: 16px;
+    }
+
+    .dash-card .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 8px 0 4px;
+    }
+
+    .dash-card .progress-bar .fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+      border-radius: 10px;
+      width: 0%;
+      transition: width 1.2s ease;
+    }
+
+    .dash-card .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.2);
+    }
+
+    .dash-card .btn-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 24px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+      background: rgba(255, 213, 74, 0.08);
+      color: var(--gold);
+      border: 1px solid rgba(255, 213, 74, 0.08);
+    }
+
+    .dash-card .btn-card:hover {
+      background: rgba(255, 213, 74, 0.15);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(255, 213, 74, 0.05);
+    }
+
+    .dash-card .btn-card.primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #0B1220;
+      border: none;
+    }
+
+    .dash-card .btn-card.primary:hover {
+      box-shadow: 0 8px 40px rgba(255, 213, 74, 0.3);
+      transform: translateY(-2px);
+    }
+
+    /* ===== SECURITY NOTICE ===== */
+    .security-notice {
+      background: rgba(17, 24, 39, 0.2);
+      border: 1px solid rgba(255, 213, 74, 0.04);
+      border-radius: 16px;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin: 24px 0 0;
+    }
+
+    .security-notice i {
+      color: var(--gold);
+      opacity: 0.4;
+      font-size: 1.2rem;
+    }
+
+    .security-notice span {
+      color: rgba(255, 255, 255, 0.2);
+      font-size: 0.8rem;
+      font-weight: 300;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      border-top: 1px solid rgba(212, 175, 55, 0.08);
+      padding: 40px 0 20px;
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 30px;
+      max-width: 1280px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 24px;
+      padding-right: 24px;
+      width: 100%;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px 30px;
+    }
+
+    .footer-links a {
+      color: var(--light-gray);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--gold);
+    }
+
+    .footer-copy {
+      font-size: 0.85rem;
+      color: #6b7280;
+      text-align: right;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 992px) {
+      .nav-links { gap: 16px; font-size: 0.9rem; }
+      .welcome-section { flex-direction: column; text-align: center; }
+      .welcome-section .user-stats { margin-left: 0; justify-content: center; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-container { flex-direction: column; gap: 12px; }
+      .nav-links { flex-wrap: wrap; justify-content: center; }
+      .welcome-section { padding: 24px 20px; }
+      .welcome-section .user-info h1 { font-size: 1.4rem; }
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .security-notice { flex-direction: column; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      .welcome-section .avatar { width: 56px; height: 56px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== PARTICLES CANVAS ===== -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <img src="bot.png" alt="NovaLearn Logo">
+        <span style="color: var(--gold);">NovaLearn</span>
+      </div>
+      <div class="nav-links">
+        <a href="https://khizarstar.github.io/novalearn/contact.html">Contact</a>
+      </div>
+      <button class="btn-logout-nav" id="logoutBtn">
+        <i class="fas fa-sign-out-alt"></i> Sign Out
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== DASHBOARD CONTENT ===== -->
+  <main class="container">
+    <div class="dashboard-content" id="dashboardContent">
+
+      <!-- Loading State -->
+      <div id="loading" style="text-align:center; padding: 60px 0;">
+        <div style="color: rgba(255,255,255,0.2); font-size: 1.2rem;">
+          <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--gold); opacity: 0.5; display: block; margin-bottom: 16px;"></i>
+          Loading your dashboard...
+        </div>
+      </div>
+
+      <!-- Dashboard Content (hidden initially) -->
+      <div id="content" style="display: none;">
+
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+          <div class="avatar-wrapper">
+            <img id="avatar" class="avatar" src="" alt="Avatar">
+          </div>
+          <div class="user-info">
+            <h1 id="welcomeTitle">Welcome back!</h1>
+            <div class="sub" id="userEmail">Loading...</div>
+            <div class="user-id" id="userId">ID: loading...</div>
+          </div>
+          <div class="user-stats">
+            <div class="stat-item">
+              <div class="num" id="subjectsCount">12</div>
+              <div class="label">Subjects</div>
+            </div>
+            <div class="stat-item">
+              <div class="num" id="sessionsCount">24</div>
+              <div class="label">AI Sessions</div>
+            </div>
+            <div class="stat-item">
+              <div class="num" id="levelDisplay">🌟</div>
+              <div class="label">Level</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+
+          <!-- Learning Overview -->
+          <div class="dash-card">
+            <div class="card-icon">📊</div>
+            <h3>Learning Overview</h3>
+            <p>Your progress across all subjects</p>
+            <div class="progress-label">
+              <span>Overall Progress</span>
+              <span id="progressPercent">64%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="fill" id="progressFill" style="width: 64%;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 12px; font-size: 0.8rem; color: rgba(255,255,255,0.15);">
+              <span>📚 8 subjects completed</span>
+              <span>⚡ 24 sessions used</span>
+            </div>
+          </div>
+
+          <!-- Continue Learning -->
+          <div class="dash-card">
+            <div class="card-icon">📚</div>
+            <h3>Continue Learning</h3>
+            <p>Pick up where you left off</p>
+            <div style="background: rgba(255,255,255,0.02); border-radius: 12px; padding: 12px; margin: 8px 0 12px;">
+              <div style="display: flex; justify-content: space-between; color: var(--light-gray); font-size: 0.85rem;">
+                <span>📘 Mathematics</span>
+                <span style="color: var(--gold);">80%</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; color: var(--light-gray); font-size: 0.85rem; margin-top: 4px;">
+                <span>⚛ Physics</span>
+                <span style="color: var(--gold);">55%</span>
+              </div>
+            </div>
+            <button class="btn-card primary" onclick="window.location.href='https://khizarstar.github.io/novalearn/'">▶ Resume Learning</button>
+          </div>
+
+          <!-- Achievements -->
+          <div class="dash-card">
+            <div class="card-icon">🏆</div>
+            <h3>Achievements</h3>
+            <p>Badges you've earned</p>
+            <div style="display: flex; gap: 12px; margin: 8px 0 12px; flex-wrap: wrap;">
+              <span style="font-size: 2rem; opacity: 0.8;">🌟</span>
+              <span style="font-size: 2rem; opacity: 0.6;">⭐</span>
+              <span style="font-size: 2rem; opacity: 0.4;">🎯</span>
+              <span style="font-size: 2rem; opacity: 0.2;">🔒</span>
+              <span style="font-size: 2rem; opacity: 0.2;">🔒</span>
+            </div>
+            <div style="font-size: 0.75rem; color: rgba(255,255,255,0.1);">
+              3 badges earned · 2 locked
+            </div>
+          </div>
+
+          <!-- Settings -->
+          <div class="dash-card">
+            <div class="card-icon">⚙️</div>
+            <h3>Settings</h3>
+            <p>Manage your profile preferences</p>
+            <div style="margin: 8px 0 12px; font-size: 0.85rem; color: rgba(255,255,255,0.2);">
+              <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.02);">
+                <span>Theme</span>
+                <span style="color: var(--gold);">NovaLearn Dark</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+                <span>Notifications</span>
+                <span style="color: var(--gold);">Enabled</span>
+              </div>
+            </div>
+            <button class="btn-card">Edit Profile</button>
+          </div>
+
+        </div>
+
+        <!-- Security Notice -->
+        <div class="security-notice">
+          <i class="fas fa-shield-alt"></i>
+          <span>You are securely logged in via Discord OAuth2. NovaLearn never stores your password.</span>
+          <span style="margin-left: auto; color: rgba(255,255,255,0.1); font-size: 0.7rem;">
+            <i class="fas fa-circle" style="color: #34d399; font-size: 0.5rem;"></i> Online
+          </span>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div>
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <img src="bot.png" alt="NovaLearn Logo" style="height:40px; width:40px; border-radius:12px; object-fit:cover;">
+        <span style="color:var(--gold); font-weight:700;">NovaLearn</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://khizarstar.github.io/novalearn/">Home</a>
+        <a href="https://khizarstar.github.io/novalearn/features.html">Features</a>
+        <a href="https://khizarstar.github.io/novalearn/commands.html">Commands</a>
+        <a href="https://khizarstar.github.io/novalearn/faq.html">FAQ</a>
+        <a href="https://khizarstar.github.io/novalearn/contact.html">Contact</a>
+        <a href="https://khizarstar.github.io/novalearn/privacy.html">Privacy Policy</a>
+        <a href="https://khizarstar.github.io/novalearn/terms.html">Terms of Service</a>
+      </div>
+    </div>
+    <div class="footer-copy">
+      © 2026 NovaLearn<br>Designed by Muhammad Khizar<br>Hosted on GitHub Pages
+    </div>
+  </footer>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // ===== PARTICLES =====
+    (function() {
+      const canvas = document.getElementById('particles-canvas');
+      const ctx = canvas.getContext('2d');
+      let w, h;
+      const particles = [];
+      const count = 60;
+
+      function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      class Particle {
+        constructor() {
+          this.x = Math.random() * w;
+          this.y = Math.random() * h;
+          this.vx = (Math.random() - 0.5) * 0.3;
+          this.vy = (Math.random() - 0.5) * 0.3;
+          this.r = Math.random() * 2 + 0.8;
+          this.a = Math.random() * 0.4 + 0.1;
+          this.color = Math.random() > 0.7 ?
+            `rgba(109, 91, 255, ${this.a})` :
+            `rgba(255, 213, 74, ${this.a})`;
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          if (this.x < 0 || this.x > w) this.vx *= -1;
+          if (this.y < 0 || this.y > h) this.vy *= -1;
+        }
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+        }
+      }
+
+      for (let i = 0; i < count; i++) particles.push(new Particle());
+
+      function drawLines() {
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 120) {
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              const alpha = 0.04 * (1 - dist / 120);
+              ctx.strokeStyle = `rgba(255, 213, 74, ${alpha})`;
+              ctx.lineWidth = 0.6;
+              ctx.stroke();
+            }
+          }
+        }
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, w, h);
+        particles.forEach(p => { p.update(); p.draw(); });
+        drawLines();
+        requestAnimationFrame(animate);
+      }
+      animate();
+    })();
+
+    // ===== NAVBAR SCROLL =====
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // ===== AUTH CHECK & DASHBOARD LOAD =====
+    const loadingEl = document.getElementById('loading');
+    const contentEl = document.getElementById('content');
+
+    async function loadDashboard() {
+      try {
+        // Check authentication status from the backend
+        const response = await fetch('http://132.243.253.240:4928/api/session', {
+          credentials: 'include'
+        });
+
+        if (!response.ok) {
+          throw new Error('Session check failed');
+        }
+
+        const data = await response.json();
+
+        if (!data.authenticated) {
+          // Not logged in - redirect to login page
+          window.location.href = 'https://khizarstar.github.io/novalearn/login.html';
+          return;
+        }
+
+        // User is authenticated - populate dashboard
+        const user = data.user;
+
+        // Welcome section
+        document.getElementById('welcomeTitle').textContent = `Welcome back, ${user.global_name || user.username}!`;
+        document.getElementById('userEmail').textContent = user.email || 'No email provided';
+        document.getElementById('userId').textContent = `ID: ${user.id}`;
+
+        // Avatar
+        if (user.avatar) {
+          document.getElementById('avatar').src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`;
+        } else {
+          document.getElementById('avatar').src = 'https://cdn.discordapp.com/embed/avatars/0.png';
+        }
+
+        // Stats (mock data for now - can be extended with real data later)
+        document.getElementById('subjectsCount').textContent = '12';
+        document.getElementById('sessionsCount').textContent = '24';
+        document.getElementById('levelDisplay').textContent = '🌟 Learner';
+
+        // Progress
+        const progress = 64;
+        document.getElementById('progressPercent').textContent = `${progress}%`;
+        document.getElementById('progressFill').style.width = `${progress}%`;
+
+        // Show content
+        loadingEl.style.display = 'none';
+        contentEl.style.display = 'block';
+
+      } catch (error) {
+        console.error('Dashboard error:', error);
+        // If authentication fails, redirect to login page
+        window.location.href = 'https://khizarstar.github.io/novalearn/login.html';
+      }
+    }
+
+    // ===== LOGOUT =====
+    document.getElementById('logoutBtn').addEventListener('click', async function() {
+      try {
+        const response = await fetch('http://132.243.253.240:4928/logout', {
+          credentials: 'include'
+        });
+
+        // Always redirect to login page after logout
+        window.location.href = 'https://khizarstar.github.io/novalearn/login.html';
+      } catch (error) {
+        console.error('Logout error:', error);
+        window.location.href = 'https://khizarstar.github.io/novalearn/login.html';
+      }
+    });
+
+    // ===== LOAD DASHBOARD ON PAGE LOAD =====
+    document.addEventListener('DOMContentLoaded', loadDashboard);
+  </script>
+
+</body>
+</html>
